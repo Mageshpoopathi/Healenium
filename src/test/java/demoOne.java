@@ -11,15 +11,19 @@ import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.net.http.HttpClient;
+import java.sql.Connection;
 import java.time.Duration;
 
 
-public class demoOne {
+public class demoOne{
     static public SelfHealingDriver driver;
 
 
     @BeforeAll
     public static void setup() {
+        DatabaseConnection db=new DatabaseConnection();
+        Connection connect=db.connectToDB("healenium","postgres","lion@208");
+        db.readData(connect,"healenium.selector");
         WebDriverManager.chromedriver().setup();
         ChromeOptions option = new ChromeOptions();
         option.addArguments("--remote-allow-origins=*");
