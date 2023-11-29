@@ -12,24 +12,25 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.net.http.HttpClient;
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.time.Duration;
 
 
 public class demoOne{
     static public SelfHealingDriver driver;
-
+    static Connection connect;
 
     @BeforeAll
     public static void setup() {
         DatabaseConnection db=new DatabaseConnection();
-        Connection connect=db.connectToDB("healenium","postgres","lion@208");
+         connect=db.connectToDB("healenium","postgres","lion@208");
         db.readData(connect,"healenium.selector");
         WebDriverManager.chromedriver().setup();
         ChromeOptions option = new ChromeOptions();
         option.addArguments("--remote-allow-origins=*");
         WebDriver delegate = new ChromeDriver();
         driver = SelfHealingDriver.create(delegate);
-        driver.get("C:/Users/LENOVO/Downloads/appiumBDD-Framework/untitled/sourceCode/Calculator/index.html");
+        driver.get("C:/Users/LENOVO/Downloads/appiumBDD-Framework/Healenium/sourceCode/Calculator/index.html");
     }
 
     //    @Test
@@ -225,10 +226,18 @@ public class demoOne{
 
 
     @AfterAll
-    public static void tearDown(){
+    public static void tearDown() throws SQLException {
         if(driver!=null){
             driver.quit();
             System.out.println("Code running successfully");
+            connect.close();
+            if(connect.isClosed())
+            {
+                System.out.println("Database connection is closed");
+            }
+            else{
+                System.out.println("Database connection is not closed");
+            }
         }
     }
 }
